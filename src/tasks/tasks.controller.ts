@@ -1,14 +1,18 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
+import { UpdateTaskStatusValidationPipe } from './pipes/update-task-status-validation.pipe';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
@@ -35,17 +39,17 @@ export class TasksController {
     return this.tasksService.createTask(createTaskDto);
   }
 
-  // @Delete('/:id')
-  // deleteTask(@Param('id') id: string) {
-  //   return this.tasksService.deleteTask(id);
-  // }
+  @Delete('/:id')
+  deleteTask(@Param('id') id: number) {
+    return this.tasksService.deleteTask(id);
+  }
 
-  // @Patch('/:id/status')
-  // @UsePipes(UpdateTaskStatusValidationPipe)
-  // updateTaskStatus(
-  //   @Param('id') id: string,
-  //   @Body() updateTaskStatusDto: UpdateTaskStatusDto,
-  // ) {
-  //   return this.tasksService.updateTaskStatus(id, updateTaskStatusDto);
-  // }
+  @Patch('/:id/status')
+  @UsePipes(UpdateTaskStatusValidationPipe)
+  updateTaskStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+  ) {
+    return this.tasksService.updateTaskStatus(id, updateTaskStatusDto);
+  }
 }
