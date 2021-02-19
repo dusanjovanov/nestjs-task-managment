@@ -7,10 +7,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 import { UpdateTaskStatusValidationPipe } from './pipes/update-task-status-validation.pipe';
 import { TasksService } from './tasks.service';
@@ -19,14 +21,11 @@ import { TasksService } from './tasks.service';
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
-  // @Get()
-  // @UsePipes(ValidationPipe)
-  // getTasks(@Query() filterDto: GetTasksFilterDto) {
-  //   if (Object.keys(filterDto).length) {
-  //     return this.tasksService.getTasksWithFilters(filterDto);
-  //   }
-  //   return this.tasksService.getAllTasks();
-  // }
+  @Get()
+  @UsePipes(ValidationPipe)
+  getTasks(@Query() filterDto: GetTasksFilterDto) {
+    return this.tasksService.getTasks(filterDto);
+  }
 
   @Get('/:id')
   async getTaskById(@Param('id', ParseIntPipe) id: number) {
